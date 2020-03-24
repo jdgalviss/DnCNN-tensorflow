@@ -4,6 +4,8 @@
   
 A tensorflow implement of the TIP2017 paper [Beyond a Gaussian Denoiser: Residual Learning of Deep CNN for Image Denoising](http://www4.comp.polyu.edu.hk/~cslzhang/paper/DnCNN.pdf)
 
+docker run -v /home/jdgalviss/applications/DnCNN-tensorflow/shared:/usr/src/app/shared -p 8888:8888 -it --rm --gpus all dncnn
+
 ## Model Architecture
 ![graph](./img/model.png)
 

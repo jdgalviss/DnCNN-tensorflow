@@ -34,7 +34,7 @@ def denoiser_test(denoiser):
     eval_files = glob('./data/test/original/*.png')
     eval_files = sorted(eval_files)
     start = time.time()
-    denoiser.test(eval_files, noisy_eval_files, ckpt_dir=args.ckpt_dir, save_dir='./data/denoised', temporal=args.temporal)
+    denoiser.test(eval_files, noisy_eval_files, ckpt_dir=args.ckpt_dir, save_dir='./data/denoised')
     end = time.time()
     print "Elapsed time:", end-start
 

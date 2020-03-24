@@ -155,7 +155,7 @@ class denoiser(object):
         else:
             return False, 0
 
-    def test(self, eval_files, noisy_files, ckpt_dir, save_dir, temporal):
+    def test(self, eval_files, noisy_files, ckpt_dir, save_dir):
         """Test DnCNN"""
         # init variables
         tf.global_variables_initializer().run()
@@ -173,6 +173,7 @@ class denoiser(object):
             noisy = cv2.imread(noisy_files[i])
             noisy = noisy.astype('float32') / 255.0
             noisy = noisy[np.newaxis, ...] 
+            print(noisy.shape)
           
             output_clean_image = self.sess.run(
                 [self.Y],feed_dict={self.Y_: clean_image, self.X: noisy,
@@ -190,6 +191,25 @@ class denoiser(object):
 
         avg_psnr = psnr_sum / len(eval_files)
         print("--- Test ---- Average PSNR %.2f ---" % avg_psnr)
+        
+    def inference(self, img, ckpt_dir):
+        """Inference with DnCNN"""
+        # init variables
+        tf.global_variables_initializer().run()
+        load_model_status, global_step = self.load(ckpt_dir)
+        assert load_model_status == True, '[!] Load weights FAILED...'
+        print(" [*] Load weights SUCCESS...")
+        noisy_image = img
+        noisy_image = cv2.resize(noisy_image, (180,180)) 
+        noisy_image = noisy_image.astype('float32') / 255.0
+        noisy_image = noisy_image[np.newaxis, ...]
+        print(noisy_image.shape)
+        print("  Imread SUCCESS...")
+        denoised_image = self.sess.run(
+                [self.Y],feed_dict={self.Y_: noisy_image, self.X: noisy_image,
+                                    self.is_training: False})
+        denoised = np.asarray(denoised_image)
+        return denoised[0,0]*255.0
 
     
 class dataset(object):
